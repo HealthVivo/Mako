@@ -6,7 +6,7 @@
 package mako;
 import dataStructure.SequenceDatabase;
 import fspm.CFSPM;
-
+import option.params;
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;
@@ -26,66 +26,69 @@ public class Mako {
      */
     public static void main(String[] args) throws IOException{
     // TODO code application logic here
+        /**
+        params paramLoader = new params();
+        paramLoader.loadParam(args);
+        int minSup = 50;
+        if (paramLoader.hasParamInput){
+            if (!paramLoader.siFileMode){
+                System.out.println("fragMean: " + paramLoader.fragMean + " fragStd: " + paramLoader.fragStd 
+                + " readLen: " + paramLoader.readLen + " clustD: " + paramLoader.clusteringDist + 
+                        " patternMaxSpan: " + paramLoader.patternMaxSpan);
+                
+                System.out.println("Working directory: " + paramLoader.workDir);
+                
+                SignalReader myReader = new SignalReader(paramLoader.fragMean, paramLoader.fragStd, paramLoader.cutStd, 
+                        paramLoader.readLen, paramLoader.clusteringDist, paramLoader.minMapQ);
+                
+                myReader.doWork(paramLoader.bamFile, paramLoader.fastaIndexFile, paramLoader.chr, paramLoader.givenRegionS, paramLoader.givenRegionE, paramLoader.superitemOut, paramLoader.abnormalSignalOut); 
 
-//        terminalParamLoader paramLoader = new terminalParamLoader();
-//        paramLoader.loadParam(args);
-//        if (paramLoader.hasParamInput){
-//            if (!paramLoader.siFileMode){
-//                System.out.println("fragMean: " + paramLoader.fragMean + " fragStd: " + paramLoader.fragStd 
-//                + " readLen: " + paramLoader.readLen + " clustD: " + paramLoader.clusteringDist);
-//                System.out.println("Working directory: " + paramLoader.workDir);
-//                
-//                SignalReader myReader = new SignalReader(paramLoader.fragMean, paramLoader.fragStd, paramLoader.cutStd, 
-//                        paramLoader.readLen, paramLoader.clusteringDist, paramLoader.minMapQ);
-//                
-//                myReader.doWork(paramLoader.bamFile, paramLoader.fastaIndexFile, paramLoader.chr, paramLoader.givenRegionS, paramLoader.givenRegionE, paramLoader.superitemOut, paramLoader.abnormalSignalOut); 
-//
-//                
-//                SequenceDatabase sequenceDatabase = new SequenceDatabase(); 
-//                int minSup = 50;
-//                
-//                System.out.println("Super-Item generation completed!!\n\nSV path: " + paramLoader.svOut);
-//                
-//                BufferedWriter svRegionWriter = new BufferedWriter(new FileWriter(paramLoader.svOut));
-//
-//
-//                sequenceDatabase.loadSequencesFromFile(paramLoader.superitemOut, svRegionWriter);
-//
-//                CFSPM algoContiguousFSPM = new CFSPM(minSup, paramLoader.patternMaxSpan);
-//                algoContiguousFSPM.setParams(myReader.chromNameMap, paramLoader.regionMaskFile);
-//                algoContiguousFSPM.runAlgorithm(sequenceDatabase, paramLoader.frequentPatternOut, paramLoader.mergedPatternOut, paramLoader.susRegionWriter, svRegionWriter, paramLoader.fastaFile);
-//                algoContiguousFSPM.printAlgoStatistics();
-//            }
-//            else{
-//                SequenceDatabase sequenceDatabase = new SequenceDatabase(); 
-//                int minSup = 50;
-//
-//                BufferedWriter svRegionWriter = new BufferedWriter(new FileWriter(paramLoader.svOut));
-//
-//
-//                sequenceDatabase.loadSequencesFromFile(paramLoader.superitemOut, svRegionWriter);
-//
-//                CFSPM algoContiguousFSPM = new CFSPM(minSup, paramLoader.fragMean);
-//                fileReader reader = new fileReader();                
-//                algoContiguousFSPM.setParams(reader.getIdxToChrName(paramLoader.fastaIndexFile), paramLoader.regionMaskFile);
-//                algoContiguousFSPM.runAlgorithm(sequenceDatabase, paramLoader.frequentPatternOut, paramLoader.mergedPatternOut, paramLoader.susRegionWriter, svRegionWriter, paramLoader.fastaFile);
-//                algoContiguousFSPM.printAlgoStatistics();
-//            } 
-//        }
+                
+                SequenceDatabase sequenceDatabase = new SequenceDatabase(); 
+                
+                
+                System.out.println("Super-Item generation completed!!\n\nSV path: " + paramLoader.svOut);
+                
+                BufferedWriter svRegionWriter = new BufferedWriter(new FileWriter(paramLoader.svOut));
 
-            String workDir = "/Users/jiadonglin/SV_data/HG00514/";
-            String bamFile = workDir + "5X/HG00514.5X.bam";
 
-//        String workDir = "/Users/jiadonglin/SV_data/synthetics/svelter_simple/";
-//        String bamFile = workDir + "simHomo.30X.sorted.rg.bam";
+                sequenceDatabase.loadSequencesFromFile(paramLoader.superitemOut, svRegionWriter);
+
+                CFSPM algoContiguousFSPM = new CFSPM(minSup, paramLoader.patternMaxSpan, paramLoader.minAf);
+                algoContiguousFSPM.setParams(myReader.chromNameMap, paramLoader.regionMaskFile);
+                algoContiguousFSPM.runAlgorithm(sequenceDatabase, paramLoader.frequentPatternOut, paramLoader.mergedPatternOut, paramLoader.susRegionWriter, svRegionWriter, paramLoader.fastaFile);
+                algoContiguousFSPM.printAlgoStatistics();
+            }
+            else{
+                SequenceDatabase sequenceDatabase = new SequenceDatabase();                 
+
+                BufferedWriter svRegionWriter = new BufferedWriter(new FileWriter(paramLoader.svOut));
+
+
+                sequenceDatabase.loadSequencesFromFile(paramLoader.superitemOut, svRegionWriter);
+
+                CFSPM algoContiguousFSPM = new CFSPM(minSup, paramLoader.fragMean, paramLoader.minAf);
+                fileReader reader = new fileReader();                
+                algoContiguousFSPM.setParams(reader.getIdxToChrName(paramLoader.fastaIndexFile), paramLoader.regionMaskFile);
+                algoContiguousFSPM.runAlgorithm(sequenceDatabase, paramLoader.frequentPatternOut, paramLoader.mergedPatternOut, paramLoader.susRegionWriter, svRegionWriter, paramLoader.fastaFile);
+                algoContiguousFSPM.printAlgoStatistics();
+            } 
+        }
+       */
+       
+//            String workDir = "/Users/jiadonglin/SV_data/NA19240/";
+//            String bamFile = workDir + "5X/NA19240.5X.bam";
+
+        String workDir = "/Users/jiadonglin/SV_data/HG00733/";
+        String bamFile = workDir + "30X/HG00733.30X.bam";
 //            
-            String superItemOut = workDir + "mako/5X/wgs.all.superitems.txt";
-            String svOutPath = workDir + "mako/5X/Mako.vcf";
-//            String susComplexRegion = workDir + "mako/CSVsRegion/susCSVs.region.vcf";
+        String superItemOut = workDir + "mako/30X/wgs.all.superitems.txt";
+        String svOutPath = workDir + "mako/30X/Mako.new.vcf";
+        String mergedPatternOut = workDir + "mako/30X/mergedPattern.txt";
 
 //        String superItemOut = workDir + "wgs.all.superitems.txt";
 //        String svOutPath = workDir + "Mako.vcf";
-
+//        String mergedPatternOut = workDir + "mergedPattern.txt";
 
             String fastaIndexFile = "/Users/jiadonglin/SV_data/ref_genome/GRCh38_full_analysis_set_plus_decoy_hla.fa.fai";
             String fastaFile = "/Users/jiadonglin/SV_data/ref_genome/GRCh38_full_analysis_set_plus_decoy_hla.fa";
@@ -106,12 +109,12 @@ public class Mako {
         
         int minMapQ = 10;
         int cutStd = 3;
-        int ArpClusterDist = fragMean - readLen;     
-        int patternGrowthLimit = fragMean;
+        int ArpClusterDist = readLen;     
+        int patternGrowthLimit = 2 * fragMean;
 
 
-        SignalReader myReader = new SignalReader(fragMean, fragStd, cutStd, readLen, ArpClusterDist, minMapQ);
-        myReader.doWork(bamFile, fastaIndexFile, null, 0, 0, superItemOut, null);                        
+//        SignalReader myReader = new SignalReader(fragMean, fragStd, cutStd, readLen, ArpClusterDist, minMapQ);
+//        myReader.doWork(bamFile, fastaIndexFile, null, 0, 0, superItemOut, null);                        
         
         SequenceDatabase sequenceDatabase = new SequenceDatabase(); 
 
@@ -122,11 +125,12 @@ public class Mako {
 
         sequenceDatabase.loadSequencesFromFile(superItemOut, svRegionWriter);
 
-        CFSPM algoContiguousFSPM = new CFSPM(minSup, patternGrowthLimit);
+        CFSPM algoContiguousFSPM = new CFSPM(minSup, patternGrowthLimit, 0.1);
         fileReader reader = new fileReader();                
         algoContiguousFSPM.setParams(reader.getIdxToChrName(fastaIndexFile), null);
-        algoContiguousFSPM.runAlgorithm(sequenceDatabase, null, null, null, svRegionWriter, fastaFile);
+        algoContiguousFSPM.runAlgorithm(sequenceDatabase, null, mergedPatternOut, null, svRegionWriter, fastaFile);
         algoContiguousFSPM.printAlgoStatistics(); 
+        
     }
-   
+    
 }

@@ -14,7 +14,7 @@ public class PseudoSequence {
     
     // keep the orignial sequence id of this pseudo-sequence
     private int seqID;
-    private int subSeqStart;
+//    private int subSeqStart;
     // pseudo-sequence corresponding sequence size in terms of itemset.
     private int seqSize;
     /**
@@ -43,7 +43,7 @@ public class PseudoSequence {
         
         this.seqID = sequence.seqID;
         this.seqSize = sequence.seqSize;
-        this.subSeqStart = sequence.firstItemset;
+//        this.subSeqStart = sequence.firstItemset;
         
         this.genomeCordStart = sequence.genomeCordStart;
         
@@ -57,6 +57,7 @@ public class PseudoSequence {
         }else{
             this.firstItem = indexItem; 
         }
+        
     }
     /**
      * Create a new pseudo sequence from a sequence
@@ -69,7 +70,7 @@ public class PseudoSequence {
         this.firstItemset = indexItemset;
         this.seqSize = sequence.size();
         this.seqID = sequence.getId();
-        this.subSeqStart = subseqStart;
+//        this.subSeqStart = subseqStart;
         
         this.size = sequence.size() - firstItemset;        
         if (this.size == 1 && sequence.getItemsets().get(firstItemset).isEmpty()){
@@ -123,12 +124,12 @@ public class PseudoSequence {
     }
     
     public int indexOf(int indexItemset, String item, Sequence sequence){
-        List<SuperItem> itemset = sequence.get(indexItemset);
+        List<SuperItem> itemset = sequence.get(indexItemset );
         for(int i = 0; i < itemset.size() ; i++){
             SuperItem superitemAtIdx = getItemAtItemsetAt(i, indexItemset, sequence);
             String superitemType = superitemAtIdx.type;
             if(superitemType.equals(item)){
-                return i;
+                return i ;
             }
         }
         return -1;

@@ -15,17 +15,17 @@ import java.util.List;
 import java.util.ArrayList;
 import java.util.Set;
 import java.util.Map;
-import java.util.HashMap;
+//import java.util.HashMap;
 
 /**
  *
  * @author jiadonglin
  */
-public class Linkage {
+public class superItemLink {
     
     int supLink;
     
-    public Linkage(){
+    public superItemLink(){
         
     }
     
@@ -38,6 +38,8 @@ public class Linkage {
         String[] qnameOneByteList = superItemOne.getQNames();
         String[] qnameTwoByteList = superItemTwo.getQNames();
         Set<String> uniqueQName = new HashSet<>();
+        
+        boolean extremeLarge = Math.abs(superItemOne.getPos() - superItemTwo.getPos()) > 500000 ? true : false;
         
         int supportedARPs = 0;
         for (String qname : qnameOneByteList){            

@@ -13,7 +13,7 @@ import java.util.*;
  */
 public class SequentialPattern {
     
-    private final List<Itemset> itemsets = new ArrayList<Itemset> ();
+    private final List<Itemset> itemsets = new ArrayList<> ();
     // sequence id
     private int id;
     private int numTypes = 0;
@@ -84,34 +84,30 @@ public class SequentialPattern {
     public boolean isARPCandidatePattern(){
 
         boolean hasARPitem = false;
-        int arpItemCount = 0;
-        int arpOEMcount = 0;        
+//        int arpItemCount = 0;
+//        int arpOEMcount = 0;        
         for (Itemset itemset: itemsets){
             List<String> items = itemset.getItems();
             for (String item : items){                
                 if (item.contains("ARP")){
                     hasARPitem = true;
-                    arpItemCount += 1;
-                    if (item.contains("OEM")){
-                        arpOEMcount += 1;
-                    }                    
+//                    arpItemCount += 1;
+//                    if (item.contains("OEM")){
+//                        arpOEMcount += 1;
+//                    }                    
                 }              
             }
         }
-        // if a pattern only contains ARP_OEM, discard here
-//        if (arpOEMcount == arpItemCount){
-//            hasARPitem = false;
-//        }
         return hasARPitem;
     }
     
     
     
     public void setItemAppear(List<ItemSeqIdentifier> itemAppearIdx){
-        this.itemAppear = itemAppearIdx;
+        itemAppear = itemAppearIdx;
     }
     public List<ItemSeqIdentifier> getItemAppear(){
-        return this.itemAppear;
+        return itemAppear;
     }
     public int size(){
         return itemsets.size();
@@ -152,6 +148,28 @@ public class SequentialPattern {
         r.append(getItemAppear().size());
         return r.toString();
     }
+    /**
+     * Return corresponding SuperItems in the pattern
+     * @param database
+     * @return 
+     */
+    public List<SuperItem> getSuperItemsInPattern(SequenceDatabase database){
+        List<SuperItem> superitems = new ArrayList<>(itemsets.size());
+        for (ItemSeqIdentifier itemId : itemAppear){
+            int seqId = itemId.getSeqID();  
+            
+            int superitemSetStartIdx = itemId.getSubSeqID() - length() + 1;
+            for (int i = 0; i < length(); i ++){
+                int superitemSetIdx = superitemSetStartIdx + i;
+                for(int j = 0; j < database.getSequenceByID(seqId).getItemsets().get(superitemSetIdx).size();j ++){
+                    SuperItem si = database.getSequenceByID(seqId).superItemAtPos(superitemSetIdx, j);
+                    superitems.add(si);
+                }
+                
+            }
+        }
+        return superitems;
+    }
     
     public String patternDetailsString(SequenceDatabase database){
         StringBuilder r = new StringBuilder("");
@@ -168,7 +186,7 @@ public class SequentialPattern {
 //        r.append(getItemAppear().size());
 //        r.append("\n");
         
-        for(ItemSeqIdentifier itemIdentity : getItemAppear()){
+        for(ItemSeqIdentifier itemIdentity : itemAppear){
             
             // write the sequence id
             int seqId = itemIdentity.getSeqID();                                   

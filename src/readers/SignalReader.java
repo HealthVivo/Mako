@@ -423,7 +423,7 @@ public class SignalReader {
        
         CigarElement leftMostCigarElement = cigarElements.get(0);
         String leftMostCigarOperator = leftMostCigarElement.getOperator().toString();
-
+      
         int mutCoord = record.getAlignmentStart();
         if (leftMostCigarOperator.equals("M") && !record.getReadNegativeStrandFlag()){
             mutCoord += leftMostCigarElement.getLength();

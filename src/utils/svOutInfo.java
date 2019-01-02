@@ -410,32 +410,21 @@ public class svOutInfo {
     
     public void writeVariantsOutput(BufferedWriter regionWriter, String chrName, StringBuilder sb) throws IOException{
         String svInfos = toString();
-        if (end - start < 50) {            
-            // Might be insertion
-//            if (pattern.contains("ARP_SMALL_INSERT")){
-//                start = suspeticRegion[0];
-//                end = suspeticRegion[1];
-//                
-//                sb.append(chrName);
-//                sb.append(svInfos);
-//                regionWriter.write(sb.toString());
-//                regionWriter.newLine(); 
-//            }
-        }
-        else{
+        if (end - start > 50){
             if (end == -1){
                 sb.append(chrName);
                 sb.append(toString());
                 regionWriter.write(sb.toString());
                 regionWriter.newLine();
-                
+
             } else{
-                
+
                 sb.append(chrName);
                 sb.append(svInfos);
                 regionWriter.write(sb.toString());
                 regionWriter.newLine();
             } 
-        }                  
+        }
+        
     }
 }

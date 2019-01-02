@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package utils;
+package strMatch;
 
 import fspm.pseudoSuperItem;
 import dataStructure.SequenceDatabase;
@@ -18,6 +18,7 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.HashSet;
 import java.util.Vector;
+import utils.svOutInfo;
 
 
 /**

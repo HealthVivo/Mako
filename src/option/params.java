@@ -19,7 +19,7 @@ import java.util.ArrayList;
  *
  * @author jiadonglin
  */
-public class terminalParamLoader {
+public class params {
     
     public int readLen;
     public int fragMean;
@@ -45,10 +45,10 @@ public class terminalParamLoader {
     public BufferedWriter susRegionWriter;
     public boolean hasParamInput = true;
     public boolean siFileMode = false;
-    
+    public double minAf = 0.2;
     public List<String> excludableRegion;
     
-    public terminalParamLoader(){        
+    public params(){        
         
     }
     
@@ -64,34 +64,36 @@ public class terminalParamLoader {
     private void printOptionsHelp(){
         System.out.println("============ Mako help info ===============");
         System.out.println("\nVersion: V1.0\nAuthor: Jiadong Lin (Xi'an JiaoTong University)\nContact: jiadong324@gmail.com");
-        System.out.println("\n================================================\n");
+        System.out.println("\nUsage:\t java -jar /path/to/Mako.jar fa=ref.genome.fa bamCfg=bam.cfg <options>\n");        
+        System.out.println("================================================\n");
         StringBuilder sb = new StringBuilder();        
         sb.append("**** Mode One: run with BAM, this will create Super-Item file ****\n");        
-        sb.append("\nUsage:\t java -jar /path/to/Mako.jar fa=ref.genome.fa bamCfg=mako.cfg\n");        
-        
+                
         sb.append("fa=   given the path of your reference file\n");     
         sb.append("bamCfg=  given the bam configuration file (BAM path, work directory, read length, estimated average and std of library insert size)\n");
         sb.append("Note: BAM path, work directory MUST be absolute path.\n");
         
         sb.append("\n**** Mode Two: only run with Super-Item file (only support whole genome discovery) ****\n");
-        sb.append("\nUsage:\t java -jar /path/to/Mako.jar fa=ref.genome.fa si=/path/to/superitems.file\n");        
+
         sb.append("fa=   given the path of your reference file\n");          
-        sb.append("si=  given the bam configuration file\n");   
+        sb.append("si=  given the SuperItem output file (default wgs.all.superitems.txt)\n");   
         
                 
-        sb.append("Optional parameters for both runing modes:\n");
+        sb.append("\nOptions:\n");
+        sb.append("af=    minimum allele fraction for Super-Item to make confident calls (default=0.2)\n");
+        sb.append("Note: use 0.1 for low coverage data (5X)\n");
         sb.append("cutStd=    given the cutoff to determine abnormal insert size read-pairs (default=3)\n");
         sb.append("maxD=    given the maximum distance to cluster abnormal read pairs (default=fragMean-readLen)\n");
+        sb.append("Note: use fragMean for low coverage data (5X)\n");
         sb.append("minQ=    given the minimum mapping quality of read (default=10)\n");
         sb.append("pMax=    a parameter control the max distance pattern can growth (default=2)\n");        
         sb.append("chrom=   given a specific region, for whole genome if it is not given (not support for mode two). (e.g chr1:1000-2000)\n");         
-        
-          
+                  
         sb.append("freOut=  output path of frequent raw patterns (optional, default=False)\n");
         sb.append("sigOut=  output path of abnormal alignments (optional, default=Flase)\n");
-        sb.append("patternOut=  output path of merged patterns (optional, default=False)\n");  
+        sb.append("mergeOut=  output path of merged patterns (optional, default=False)\n");  
         sb.append("indelOut=    output path of INDELS (optional, default=False)\n");
-        sb.append("regionMask=   regions to exclude during SV discovery (optional)\n");
+//        sb.append("regionMask=   regions to exclude during SV discovery (optional)\n");
         
         System.out.println(sb.toString());
     }
@@ -114,7 +116,7 @@ public class terminalParamLoader {
             }
             
             if (argTokens[0].equals("pMax")){
-                patternMaxSpan = fragMean + Integer.parseInt(argTokens[1]) * fragStd;
+                patternMaxSpan = Integer.parseInt(argTokens[1]) * fragMean;
             }
             
             if (argTokens[0].equals("chrom")){
@@ -131,13 +133,16 @@ public class terminalParamLoader {
                 fastaFile = argTokens[1];
                 fastaIndexFile = fastaFile + ".fai";
             }
+            if (argTokens[0].equals("af")){
+                minAf = Double.parseDouble(argTokens[1]);
+            }
             if (argTokens[0].equals("itemOut")){
                 superitemOut = argTokens[1];
             }
             if (argTokens[0].equals("sigOut") && argTokens[0].equals("True")){
                 abnormalSignalOut = "wgs.abnormal.signals.txt";
             }
-            if (argTokens[0].equals("patternOut") && argTokens[0].equals("True")){
+            if (argTokens[0].equals("mergeOut") && argTokens[0].equals("True")){
                 mergedPatternOut = workDir + "wgs.merged.patterns.txt";
             }
             if (argTokens[0].equals("svOut")){
@@ -146,9 +151,9 @@ public class terminalParamLoader {
             if (argTokens[0].equals("freOut") && argTokens[0].equals("True")){
                 frequentPatternOut = workDir + "wgs.frequent.patterns.txt";
             }
-            if (argTokens[0].equals("regionMask")){
-                regionMaskFile = argTokens[1];
-            }
+//            if (argTokens[0].equals("regionMask")){
+//                regionMaskFile = argTokens[1];
+//            }
             if (argTokens[0].equals("indelOut") && argTokens[0].equals("True")){
                 indelOut = workDir + "wgs.indels.txt";
             }
@@ -171,6 +176,7 @@ public class terminalParamLoader {
             }
             if (tokens[0].equals("mean")){
                 fragMean = Integer.parseInt(tokens[1]);
+                patternMaxSpan = 2 * fragMean;
             }
             if (tokens[0].equals("stdev")){
                 fragStd = Integer.parseInt(tokens[1]);
@@ -182,7 +188,7 @@ public class terminalParamLoader {
             if (tokens[0].equals("workDir")){
                 workDir = tokens[1];
                 superitemOut = workDir + "/wgs.all.superitems.txt";
-                svOut = workDir + "/Mako.out";
+                svOut = workDir + "/Mako.vcf";
             }
         }
     }   

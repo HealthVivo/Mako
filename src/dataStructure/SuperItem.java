@@ -298,10 +298,10 @@ public class SuperItem implements Comparable<SuperItem>{
         
         Map<MutSignal, Integer> typeCountMap = new HashMap<>();
         
-        List<Integer> superitemRecordPos = new ArrayList<>();
+        List<Integer> superitemMutSigPos = new ArrayList<>();
         List<Integer> superitemMateRecordPos = new ArrayList<>();
         
-        Set<String> queryName = new HashSet<>();
+//        Set<String> queryName = new HashSet<>();
         qnames = new String[mutList.size()];
         
         int longestD = -1;
@@ -332,14 +332,16 @@ public class SuperItem implements Comparable<SuperItem>{
             String signalQname = signal.getqName();           
             
             
-            superitemRecordPos.add(signal.getRecordPos());
+            superitemMutSigPos.add(signal.getMutPos());
             superitemMateRecordPos.add(signal.getMateRecordPos());                        
             
-            if (!queryName.contains(signalQname)){                
-                queryName.add(signalQname);
-                qnames[signalIdx] = signalQname;
-                signalIdx += 1;
-            }
+//            if (!queryName.contains(signalQname)){                
+//                queryName.add(signalQname);
+//                qnames[signalIdx] = signalQname;
+//                signalIdx += 1;
+//            }
+            qnames[signalIdx] = signalQname;
+            signalIdx += 1;
             
             if (!typeCountMap.containsKey(signal)){
                 typeCountMap.put(signal, 1);
@@ -350,10 +352,10 @@ public class SuperItem implements Comparable<SuperItem>{
             }
         }
         
-        Collections.sort(superitemRecordPos);
+        Collections.sort(superitemMutSigPos);
         Collections.sort(superitemMateRecordPos);
         
-        List<Integer> superItemOutlierRemoved = removePosOutlier(superitemRecordPos);
+        List<Integer> superItemOutlierRemoved = removePosOutlier(superitemMutSigPos);
         List<Integer> superItemMateOutlierRemoved = removePosOutlier(superitemMateRecordPos);
         
         
@@ -378,8 +380,7 @@ public class SuperItem implements Comparable<SuperItem>{
         type = majoritySignal.getMutSignalType();        
         ori = majoritySignal.getMutSignalOri();
         chromIdx = majoritySignal.getSignalChromIdx();
-        chromName = majoritySignal.getSignalRef();
-        superItemPos = majoritySignal.getMutPos();
+        chromName = majoritySignal.getSignalRef();       
         weight = mutList.size();   
         
         
@@ -404,15 +405,17 @@ public class SuperItem implements Comparable<SuperItem>{
         
         // If this is a discordant read-pair based superitem, adjust the position and assign query names for further process.
         if (type.contains("ARP")){
-//            qnames = qNameByteList;
-            superitemInterval = new QueryInterval(chromIdx, superItemOutlierRemoved.get(0), superItemOutlierRemoved.get(superItemOutlierRemoved.size() - 1));
-            superitemMateInterval = new QueryInterval(chromIdx, superItemMateOutlierRemoved.get(0), superItemMateOutlierRemoved.get(superItemMateOutlierRemoved.size() - 1));
-                        
             if (ori.equals("+")){
-                superItemPos = mutList.get(mutList.size() - 1).getMutPos() - 1;
+                superItemPos = superitemMutSigPos.get(superitemMutSigPos.size() - 1) - 1;
             }else{
-                superItemPos = mutList.get(0).getMutPos() + 1;
+                superItemPos = superitemMutSigPos.get(0) + 1;
             }
+            
+//            if (superItemPos == 180540609){
+//                System.out.println("sss");
+//            }
+            superitemInterval = new QueryInterval(chromIdx, superItemOutlierRemoved.get(0), superItemOutlierRemoved.get(superItemOutlierRemoved.size() - 1));
+            superitemMateInterval = new QueryInterval(chromIdx, superItemMateOutlierRemoved.get(0), superItemMateOutlierRemoved.get(superItemMateOutlierRemoved.size() - 1));                                    
 
         }else{
 //            qnames = qNameByteList;
@@ -420,6 +423,7 @@ public class SuperItem implements Comparable<SuperItem>{
             if (type.equals("SMS") && typeCountMap.size() > 1){
                 refineSuperItemType(typeCountMap, mutList);
             }    
+            superItemPos = majoritySignal.getMutPos();
             superitemInterval = new QueryInterval(chromIdx, superItemPos, superItemPos);
             superitemMateInterval = new QueryInterval(chromIdx, superItemMateOutlierRemoved.get(0), superItemMateOutlierRemoved.get(superItemMateOutlierRemoved.size() - 1));                        
         }        
