@@ -1,57 +1,91 @@
-# Morphling
-An ultra-fast model free framework for structural variants discovery
+# Mako
+Mako is a model-free ultra fast genome structural variants detection tool. It also provides a machine learning based method to classify SVs based on their mutational signature sequential features as well as providing scoring method for complex SVs.
 
-Current version: 
-MorphReleaseV1.0 
+# Install and run
 
-Dependency:
+Mako requires Java JDK (>=v1.6) and Python (2.7) to run. 
 
-•	Htsjdk: A Java API for high-throughput sequencing data (HTS) formats. https://github.com/samtools/htsjdk.
+#### Dependency
+* htsjdk(https://github.com/samtools/htsjdk): A Java API for high-throughput sequencing data (HTS) formats.
+* Numpy: used in Python script for BAM parameter estimation.
 
-•	Numpy: used in Python script for BAM parameter estimation.
+#### Usage
+```sh
+$ git clone https://github.com/jiadong324/Morphling.git
+```
 
-Download and install:
+Run bamConfig.py to get BAM statistics, including read length, libraray average and standard deviation of insert size. To run it, you have to specify how much standard deviation (-X) away are considered as discordant insert size and number of read-pairs (-N) you would like to use for the estimation.
+```sh
+Run bamConfig.py
+$ samtools view your.bam | python bamConfig.py -X 3 -N 30000
+```
+Further you have to create a Mako configuration file, including BAM statistics, absolute path to your BAM file and working directory. 
+```
+Example of Mako config file
+readlen:126
+mean:550
+stdev:100
+bam: /path/to/sample.bam
+workDir:/path/to/output
+```
 
-•	We provide an executable JAR file in dist directory for command line usage, you don’t have to build the source code.
+Get help info and run SV discovery.
+```
+$ java -jar /path/to/Morphling/dist/Mako.jar
+```
 
-•	A user-interface is provided for non-experience Linux/Unix users. It is an executable JAR file, which can be launched directly.
+Run mode one: run with BAM file, you can either output all SuperItems to file or keep it in the memory. It is suggested to keep them in file, so you don't need to go through the BAM file agian for next run with different parameters. The command line used to run the program with default parameter settings:
+```
+$ java -jar /path/to/Mako.jar fa=file.fa bamCfg=bam.cfg
+```
+Run mode two: run on SuperItem files directly without BAM file
 
-Usage:
+```
+$ java -jar /path/to/Mako.jar fa=file.fa itemOut=item.txt
+```
 
-•	First run python script to generate a BAM configuration file at the same location with your BAM file. You need to specify how much standard deviation (-X) away are considered as abnormal insert size and the number of samples (-N) you would like to use for the estimation.
-Example usage: samtools view file.bam | your/path/to/bamConfig.py –X 3 –N 30000
-
-•	Mode one: run with BAM. 
-
-•	Mode two: run without BAM, this mode only requires Super-Item file created at mode one. Therefore, if you want to re-run your program with masked regions or with different parameters, you only need to run mode two.
-
-Command Line:
-
-•	Get help information of the program: 
-
-Java –jar MorphReleaseV1.jar
-
-•	Mode one example:
-
-Java –jar MophReleaseV1.jar bamFile=file.bam faFile=file.fa bamCfg=bam.cfg regionMask=region.bed
-
-•	Mode two example:
-
-Java –jar MophReleaseV1.jar faFile=file.fa bamCfg=bam.cfg itemOut=item.txt regionMask=region.bed
-
-Output format:
+#### Output format
 
 The SV output file contains predicted SV position on the genome. Additional information includes SupType, Pattern, Region (genome region spanned by pattern), weights, ratio (allele fraction of each Super-Item), orientation (orientation of reads in Super-Item). A single SV can be supported by more than one evidence, more evidence indicates more confident calls.
+* SupType=ARP_Span: indicates SV is combined by two patterns that is able to link together through read-pair. Each pattern of the SV might be a breakpoint. Number of read pairs support such relation is provided.
+* SupType=Self: a pattern is self-linked through read pairs. Then we estimate potential breakpoint based on abnormal read pairs. Number, quality and weight of these supporting read pairs is provided.
+* SupType=Split: indicates SV is discovered based on split alignment. We provide additional information, such as number of split read support, split read mapping quality.
+* SupType=Cross: indicates SV is discovered based on local sequence cross links. Additional information includes number of reads support the cross, the maximum cross matched sequence length.
+* SupType=Realign: for region with multiple clipped Super-Items, we usually do realignment, this helps discover INDELS and small SVs. Information includes minus and plus strand support read is provided.
+* SupType=OEM: one-end-unmapped reads formed cluster may indicate potential insertion breakpoint near OEM Super-Item. This is not a very confident evidence, but we report such abnormal.
 
-•	SupType=ARP_Span: indicates SV is combined by two patterns that is able to link together through read-pair. Each pattern of the SV might be a breakpoint. Number of read pairs support such relation is provided.
+# Classify and score SVs
 
-•	SupType=Self: a pattern is self-linked through read pairs. Then we estimate potential breakpoint based on abnormal read pairs. Number, quality and weight of these supporting read pairs is provided.
+Todo...
 
-•	SupType=Split: indicates SV is discovered based on split alignment. We provide additional information, such as number of split read support, split read mapping quality.
+# Contact
+If you have questions or encouter problems, please feel free to contact: jiadong324@gmail.com, ccxtbut@gmail.com.
 
-•	SupType=Cross: indicates SV is discovered based on local sequence cross links. Additional information includes number of reads support the cross, the maximum cross matched sequence length.
+License
+----
 
-•	SupType=Realign: for region with multiple clipped Super-Items, we usually do realignment, this helps discover INDELS and small SVs. Information includes minus and plus strand support read is provided.
 
-•	SupType=OEM: one-end-unmapped reads formed cluster may indicate potential insertion breakpoint near OEM Super-Item. This is not a very confident evidence, but we report such abnormal.
 
+[//]: # (These are reference links used in the body of this note and get stripped out when the markdown processor does its job. There is no need to format nicely because it shouldn't be seen. Thanks SO - http://stackoverflow.com/questions/4823468/store-comments-in-markdown-syntax)
+
+
+   [dill]: <https://github.com/joemccann/dillinger>
+   [git-repo-url]: <https://github.com/joemccann/dillinger.git>
+   [john gruber]: <http://daringfireball.net>
+   [df1]: <http://daringfireball.net/projects/markdown/>
+   [markdown-it]: <https://github.com/markdown-it/markdown-it>
+   [Ace Editor]: <http://ace.ajax.org>
+   [node.js]: <http://nodejs.org>
+   [Twitter Bootstrap]: <http://twitter.github.com/bootstrap/>
+   [jQuery]: <http://jquery.com>
+   [@tjholowaychuk]: <http://twitter.com/tjholowaychuk>
+   [express]: <http://expressjs.com>
+   [AngularJS]: <http://angularjs.org>
+   [Gulp]: <http://gulpjs.com>
+
+   [PlDb]: <https://github.com/joemccann/dillinger/tree/master/plugins/dropbox/README.md>
+   [PlGh]: <https://github.com/joemccann/dillinger/tree/master/plugins/github/README.md>
+   [PlGd]: <https://github.com/joemccann/dillinger/tree/master/plugins/googledrive/README.md>
+   [PlOd]: <https://github.com/joemccann/dillinger/tree/master/plugins/onedrive/README.md>
+   [PlMe]: <https://github.com/joemccann/dillinger/tree/master/plugins/medium/README.md>
+   [PlGa]: <https://github.com/RahulHP/dillinger/blob/master/plugins/googleanalytics/README.md>
