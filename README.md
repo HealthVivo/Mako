@@ -48,7 +48,7 @@ $ java -jar /path/to/Mako.jar fa=file.fa itemOut=item.txt
 
 The SV output file contains predicted SV position on the genome. Additional information includes SupType, Pattern, Region (genome region spanned by pattern), weights, ratio (allele fraction of each Super-Item), orientation (orientation of reads in Super-Item). A single SV can be supported by more than one evidence, more evidence indicates more confident calls.
 * SupType=ARP_Span: indicates SV is combined by two patterns that is able to link together through read-pair. Each pattern of the SV might be a breakpoint. Number of read pairs support such relation is provided.
-* SupType=Self: a pattern is self-linked through read pairs. Then we estimate potential breakpoint based on abnormal read pairs. Number, quality and weight of these supporting read pairs is provided.
+* SupType=ARP_Self: a pattern is self-linked through read pairs. Then we estimate potential breakpoint based on abnormal read pairs. Number, quality and weight of these supporting read pairs is provided.
 * SupType=Split: indicates SV is discovered based on split alignment. We provide additional information, such as number of split read support, split read mapping quality.
 * SupType=Cross: indicates SV is discovered based on local sequence cross links. Additional information includes number of reads support the cross, the maximum cross matched sequence length.
 * SupType=Realign: for region with multiple clipped Super-Items, we usually do realignment, this helps discover INDELS and small SVs. Information includes minus and plus strand support read is provided.
