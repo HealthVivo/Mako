@@ -134,15 +134,20 @@ public class CFSPM {
             String item = entry.getKey();
             Map<Integer, pseudoSequentialPattern> prefixTracker = new HashMap<>();
             if (entry.getValue().size() >= minsuppAbsolute){
-                                
+//                if (item.equals("ARP_RR")){
+//                    System.out.println("ssss");
+//                }
                 List<ItemSeqIdentifier> itemAppearIdx = entry.getValue();
                 List<PseudoSequence> projectedDatabase = buildProjectedContext(prefixTracker, item, initialContext, false);
                 
+                
                 // Create a prefix with initial sequence ID 0
                 SequentialPattern prefix = new SequentialPattern(0);
+                
                 prefix.addItemset(new Itemset(item));
                 prefix.setItemAppear(itemAppearIdx);
                 
+                                                
                 depthFirstRecursion(prefixTracker, prefix, projectedDatabase);
             }
         }
@@ -153,7 +158,7 @@ public class CFSPM {
     private void depthFirstRecursion(Map<Integer, pseudoSequentialPattern> prefixTracker, SequentialPattern prefix, List<PseudoSequence> psSeqDatabase) throws IOException{        
         Set<Pair> pairs = itemCountsInProjectedDB(prefix, psSeqDatabase);
         for (Pair pair : pairs){
-            if (pair.getCount() >= minsuppAbsolute){
+            if (pair.getCount() >= minsuppAbsolute){                                               
                 SequentialPattern newPrefix;
                 // If the frequent item is of form (_A), append it to the last itemset of the current prefix. 
                 if(pair.isPostfix()){
@@ -163,20 +168,9 @@ public class CFSPM {
                 }
                 newPrefix.setItemAppear(pair.getItemAppear());
                 savePatternCandidate(prefixTracker, newPrefix); 
-//                if (newPrefix.size() > 1){
-//                    List<SuperItem> superitems = newPrefix.getSuperItemsInPattern(database);                    
-//                    
-//                    for (int i = 0; i < superitems.size(); i++){   
-//                        
-//                        if (superitems.get(i).getPos() == 50227212){
-//                            System.out.println(newPrefix.toString());
-//                            System.out.println(superitems.size());
-//                            System.out.println(superitems.get(i).toConciseString() + "\t" + i);     
-//                        }   
-//                        
-//                    }                    
-//                }  
-               
+                                
+                
+                                                  
                 // Build pseudo-projected database of appended item.
                 List<PseudoSequence> projectedDB = buildProjectedContext(prefixTracker, pair.getItem(), psSeqDatabase, pair.isPostfix());
                          
@@ -478,9 +472,7 @@ public class CFSPM {
         superItemLink linker = new superItemLink();
         return linker.twoSuperItemLinkCheck(curSuperItem, nextSuperItem);
     }
-    
-    
-    
+           
 
     /**
      * Append to <(A)>

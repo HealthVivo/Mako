@@ -81,9 +81,6 @@ public class estimateBPs {
             int sup = maxMateInfo[1];
             pseudoSequentialPattern pattern = mergedPatterns.get(patternIdx);
 
-            if (pattern.getPatternLeftMostPos() == 105054356){
-                System.out.println(pattern.toString(database));
-            }
 
             if (linkedPatternCalled.contains(patternIdx)){
                 continue;
@@ -98,7 +95,7 @@ public class estimateBPs {
              // Self linked pattern (either ARP or split align)
 //            if (mateIdx == patternIdx && pattern.selfLinkedSuperItemMapQCheck(20)){  
             if (mateIdx == patternIdx) {  
-                int[] selfLinkedBP = pattern.selfLinkedPatternBP(database);
+                int[] selfLinkedBP = pattern.selfLinkedPatternBP(database, 20);
                 // split align only
                 if (splitMate == -2){
                     linkType = 5;
@@ -146,9 +143,7 @@ public class estimateBPs {
                 }                
             }
             else{
-                pseudoSequentialPattern matePattern = mergedPatterns.get(mateIdx);
-                
-//                System.out.println(matePattern.toString(database));
+                pseudoSequentialPattern matePattern = mergedPatterns.get(mateIdx);                
                 int[] estBps = pattern.arpLinkedPatternBp(matePattern, database);
                 
                 if (pattern.arpSpanUseSplit){
@@ -159,9 +154,6 @@ public class estimateBPs {
                 }
                 
                 if (estBps[0] > 0 && estBps[1] > 0){  
-//                    if (patternIdx == 29676 || mateIdx == 29676){
-//                        System.out.println(pattern.toString(database));
-//                    }
                     linkedPatternCalled.add(patternIdx);
                     linkedPatternCalled.add(mateIdx);
                     
@@ -203,12 +195,8 @@ public class estimateBPs {
         
         for (Integer id : unLinkedPattern){
             sb = new StringBuilder();
-            pseudoSequentialPattern pattern = mergedPatterns.get(id); 
-            int leftBound = pattern.patternLeftMostPos - 200;
-            int rightBound = pattern.patternLeftMostPos + 200;
-            if (pattern.getPatternLeftMostPos() == 19670779){
-                System.out.println(pattern.toString(database));
-            }  
+            pseudoSequentialPattern pattern = mergedPatterns.get(id);             
+ 
             int[] supEvi = new int[]{0,-1, -1};
             String chrName = pattern.getChrName(pattern.ChromId, idxNameMap);
             
@@ -219,6 +207,7 @@ public class estimateBPs {
             if (arpBasedEstimateInfo[0] > 0 && arpBasedEstimateInfo[1] > 0){
                 supEvi[1] = arpBasedEstimateInfo[2];
                 supEvi[2] = 0;
+
                 svOutInfo svInfo = new svOutInfo(arpBasedEstimateInfo[0], arpBasedEstimateInfo[1], pattern.toTypeString(database), -2, supEvi, pattern.getWeights(), 
                         pattern.getPatternSpanRegion(), pattern.getWeightRatio(), pattern.getOris());
 
@@ -243,15 +232,17 @@ public class estimateBPs {
                 svInfo.writeVariantsOutput(regionWriter, chrName, sb);
 
             }
-            
+            // Local realignment   
+//            int leftBound = pattern.patternLeftMostPos - 200;
+//            int rightBound = pattern.patternLeftMostPos + 200;
 //            else if (!pattern.hasArpSuperItem() || pattern.patternRightMostPos - pattern.patternLeftMostPos <= 200){                
 //
 //                ReferenceSequence seq = refSeqFile.getSubsequenceAt(chrName, leftBound, rightBound);
 //                String refStr = seq.getBaseString();
-//                                                                                
+//
 //                // Do local alignment              
 //                List<svOutInfo> svFromLocalAlign = pattern.doLocalAlign(database, refStr, pattern.patternLeftMostPos - 200);                  
-//                                
+//
 //                if (!svFromLocalAlign.isEmpty()){
 //                    for (svOutInfo sv : svFromLocalAlign){
 //                        sb = new StringBuilder();
@@ -259,8 +250,7 @@ public class estimateBPs {
 //                        sv.writeVariantsOutput(regionWriter, chrName, sb);
 //                    }
 //                }               
-//            }
-            
+//            }            
         }        
     }
     /**

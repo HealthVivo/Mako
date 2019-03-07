@@ -15,6 +15,12 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import htsjdk.samtools.cram.structure.CramCompressionRecord;
+
+import java.io.BufferedInputStream;
+import java.io.InputStream;
+import java.util.List;
+
 
 /**
  *
@@ -35,6 +41,7 @@ public class fileReader {
         final SamReader samReader = samReaderFactory.open(new File(bamFilePath));
         return samReader;
     }
+    
     
     public void readFaIdxFile(String faIdxFile, String[] chromNameMap, int[] chromLengthMap) throws IOException{
         FileInputStream fin = new FileInputStream(new File(faIdxFile));

@@ -17,7 +17,7 @@ public class svOutInfo {
     int start;
     int end;
     String pattern = "";
-    int supType; // 1 mate linked. -1 self linked. 0 non-linkable
+    int supType; 
     String linkTypeStr = "";
     int[] supEvi;
     int[] selfLinkedMapQ;
@@ -231,24 +231,24 @@ public class svOutInfo {
             sb.append(";Cross_read=");
             sb.append(supEvi[2]);
         }
-        if(supType == 9){
-            linkTypeStr = "ARP_Infer";
-            sb.append("ARP_Infer;");
-            sb.append("ARP_sup=");
-            sb.append(supEvi[1]);            
-        }
-        if (supType == 10){
-            linkTypeStr = "Realign";
-            sb.append("Realign;");
-            sb.append("AF=");
-            sb.append(realignBpAF);
-            sb.append(";AR=");
-            sb.append(supEvi[0]);                      
-            sb.append(";PR=");
-            sb.append(supEvi[1]);            
-            sb.append(";MR=");
-            sb.append(supEvi[2]);
-        }
+//        if(supType == 9){
+//            linkTypeStr = "ARP_Infer";
+//            sb.append("ARP_Infer;");
+//            sb.append("ARP_sup=");
+//            sb.append(supEvi[1]);            
+//        }
+//        if (supType == 10){
+//            linkTypeStr = "Realign";
+//            sb.append("Realign;");
+//            sb.append("AF=");
+//            sb.append(realignBpAF);
+//            sb.append(";AR=");
+//            sb.append(supEvi[0]);                      
+//            sb.append(";PR=");
+//            sb.append(supEvi[1]);            
+//            sb.append(";MR=");
+//            sb.append(supEvi[2]);
+//        }
         
         sb.append(";Pattern=");
         sb.append(pattern);                         
@@ -364,20 +364,14 @@ public class svOutInfo {
         
         if (supType == -1){
             selfLinkedItemTypes = itemTypes;
-            if (itemTypes[0].contains("ARP") && !itemTypes[1].contains("ARP")){
-                isPassed = false;
-            }
-            else if (!itemTypes[0].contains("ARP") && itemTypes[1].contains("APR")){
-                isPassed = false;
-            }
-            else if (itemTypes[0].equals(itemTypes[1]) && !itemTypes[0].contains("ARP")){
+            if (af[0] <= 0.2 || af[1] <= 0.2){
                 isPassed = false;
             }
         }           
         
     }
     /**
-     * Used to check if two SV are identical, just for SV < readLen
+     * Used to check if two SV are identical, just for SVs discovered through local realignment (not applicable in current version)
      * @param svInfo
      * @return 
      */
@@ -399,13 +393,13 @@ public class svOutInfo {
         return identical;
     }
        
-    public void writeSusRegion(BufferedWriter susRegionWriter, String chrName, StringBuilder sb) throws IOException{
-        sb.append(chrName);
-//        sb.append("\t");
-        sb.append(toString());
-        susRegionWriter.write(sb.toString());
-        susRegionWriter.newLine();
-    }
+//    public void writeSusRegion(BufferedWriter susRegionWriter, String chrName, StringBuilder sb) throws IOException{
+//        sb.append(chrName);
+////        sb.append("\t");
+//        sb.append(toString());
+//        susRegionWriter.write(sb.toString());
+//        susRegionWriter.newLine();
+//    }
   
     
     public void writeVariantsOutput(BufferedWriter regionWriter, String chrName, StringBuilder sb) throws IOException{

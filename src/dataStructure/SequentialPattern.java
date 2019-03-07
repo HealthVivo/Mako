@@ -153,23 +153,23 @@ public class SequentialPattern {
      * @param database
      * @return 
      */
-    public List<SuperItem> getSuperItemsInPattern(SequenceDatabase database){
-        List<SuperItem> superitems = new ArrayList<>(itemsets.size());
-        for (ItemSeqIdentifier itemId : itemAppear){
-            int seqId = itemId.getSeqID();  
-            
-            int superitemSetStartIdx = itemId.getSubSeqID() - length() + 1;
-            for (int i = 0; i < length(); i ++){
-                int superitemSetIdx = superitemSetStartIdx + i;
-                for(int j = 0; j < database.getSequenceByID(seqId).getItemsets().get(superitemSetIdx).size();j ++){
-                    SuperItem si = database.getSequenceByID(seqId).superItemAtPos(superitemSetIdx, j);
-                    superitems.add(si);
-                }
-                
-            }
-        }
-        return superitems;
-    }
+//    public List<SuperItem> getSuperItemsInPattern(SequenceDatabase database){
+//        List<SuperItem> superitems = new ArrayList<>(itemsets.size());
+//        for (ItemSeqIdentifier itemId : itemAppear){
+//            int seqId = itemId.getSeqID();  
+//            
+//            int superitemSetStartIdx = itemId.getSubSeqID() - length() + 1;
+//            for (int i = 0; i < length(); i ++){
+//                int superitemSetIdx = superitemSetStartIdx + i;
+//                for(int j = 0; j < database.getSequenceByID(seqId).getItemsets().get(superitemSetIdx).size();j ++){
+//                    SuperItem si = database.getSequenceByID(seqId).superItemAtPos(superitemSetIdx, j);
+//                    superitems.add(si);
+//                }
+//                
+//            }
+//        }
+//        return superitems;
+//    }
     
     public String patternDetailsString(SequenceDatabase database){
         StringBuilder r = new StringBuilder("");

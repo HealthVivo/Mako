@@ -11,8 +11,8 @@ import option.params;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
-import readers.fileReader;
 import readers.SignalReader;
+import readers.fileReader;
 
 
 /**
@@ -26,10 +26,11 @@ public class Mako {
      */
     public static void main(String[] args) throws IOException{
     // TODO code application logic here
+    
+        int minSup = 50;        
         /**
         params paramLoader = new params();
-        paramLoader.loadParam(args);
-        int minSup = 50;
+        paramLoader.loadParam(args);                
         if (paramLoader.hasParamInput){
             if (!paramLoader.siFileMode){
                 System.out.println("fragMean: " + paramLoader.fragMean + " fragStd: " + paramLoader.fragStd 
@@ -74,16 +75,16 @@ public class Mako {
                 algoContiguousFSPM.printAlgoStatistics();
             } 
         }
-       */
+        */
        
-//            String workDir = "/Users/jiadonglin/SV_data/NA19240/";
-//            String bamFile = workDir + "5X/NA19240.5X.bam";
+//            String workDir = "/Users/jiadonglin/SV_data/synthetics/svsimGenome/wgs/INV/30X_new/550M150S/";
+//            String bamFile = workDir + "simINV.wgs30X.550M150S.sorted.rg.bam";
 
-        String workDir = "/Users/jiadonglin/SV_data/HG00733/";
+        String workDir = "/Users/jiadonglin/SV_data/HG00514/";
         String bamFile = workDir + "30X/HG00733.30X.bam";
 //            
         String superItemOut = workDir + "mako/30X/wgs.all.superitems.txt";
-        String svOutPath = workDir + "mako/30X/Mako.new.vcf";
+        String svOutPath = workDir + "mako/30X/Mako.reproduce.new.vcf";
         String mergedPatternOut = workDir + "mako/30X/mergedPattern.txt";
 
 //        String superItemOut = workDir + "wgs.all.superitems.txt";
@@ -103,8 +104,8 @@ public class Mako {
         int fragStd = 160;
         int readLen = 126;
 
-//        int fragMean = 500;
-//        int fragStd = 50;
+//        int fragMean = 550;
+//        int fragStd = 150;
 //        int readLen = 150;
         
         int minMapQ = 10;
@@ -118,7 +119,6 @@ public class Mako {
         
         SequenceDatabase sequenceDatabase = new SequenceDatabase(); 
 
-        int minSup = 50;
 
         BufferedWriter svRegionWriter = new BufferedWriter(new FileWriter(svOutPath));
 //            BufferedWriter susRegionWriter = new BufferedWriter(new FileWriter(susComplexRegion));
@@ -132,5 +132,6 @@ public class Mako {
         algoContiguousFSPM.printAlgoStatistics(); 
         
     }
+        
     
 }

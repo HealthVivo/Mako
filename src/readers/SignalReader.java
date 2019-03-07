@@ -13,6 +13,16 @@ import java.io.BufferedWriter;
 import java.io.FileWriter;
 
 import channel.*;
+import htsjdk.samtools.cram.build.ContainerParser;
+import htsjdk.samtools.cram.build.Cram2SamRecordFactory;
+import htsjdk.samtools.cram.build.CramIO;
+import htsjdk.samtools.cram.structure.Container;
+import htsjdk.samtools.cram.structure.CramCompressionRecord;
+import htsjdk.samtools.cram.structure.CramHeader;
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStream;
 
 /**
  *
@@ -223,7 +233,33 @@ public class SignalReader {
                 rpTracker.clear();
             }
         }                                               
-    }        
+    }      
+    
+    private void extractSignalsFromCRAM(String cramFile, String refFile, String chrom, 
+            int chromS, int chromE) throws IOException, IllegalAccessException{
+        rpTracker = new HashMap<>();
+        InputStream is = new BufferedInputStream(new FileInputStream(new File(cramFile)));
+        CramHeader cramHeader = CramIO.readCramHeader(is);
+        Container c = null;
+        ContainerParser parser = new ContainerParser(cramHeader.getSamFileHeader());
+        
+        // Access specific genome region
+        if (chrom != null){            
+            if (cramHeader.getSamFileHeader().getSequenceIndex(chrom) < 0){
+                System.err.println("Reference sequence not found for name: " + chrom);
+                return;
+            }
+            ArrayList<CramCompressionRecord> cramRecords = new ArrayList<>(10000);
+            while(true){
+                parser.getRecords(c, cramRecords, ValidationStringency.SILENT); 
+                Cram2SamRecordFactory c2sFactory = new Cram2SamRecordFactory(cramHeader.getSamFileHeader());
+
+            }
+        }
+        
+        
+    }
+    
     /**
      * Analysis each BAM record through different channels
      * @param iterator

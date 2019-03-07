@@ -69,8 +69,9 @@ public class merge {
             if (allPatterns.isEmpty()){
                 continue;
             }
-            Map<Integer, List<Integer>> indexMap = getPatternStartIndexMap(allPatterns);
+            Map<Integer, List<Integer>> indexMap = getPatternStartIndexMap(allPatterns, database);
             List<pseudoSequentialPattern> mergedPatterns = oneChromMerge(i, database, allPatterns, patternCandidates, indexMap);
+           
             oneChrPatternLinkageAnalysis(database, estimator, mergedWriter, regionWriter, mergedPatterns, refSeqFile, susRegionWriter);
         }
         
@@ -130,7 +131,9 @@ public class merge {
                 tracker.add(nextPos);
                 
                 pseudoSequentialPattern newMergedPattern = new pseudoSequentialPattern(mergedSuperItems, database);
-    
+                if (newMergedPattern.patternLeftMostPos == 181074103){
+                    System.out.println(newMergedPattern.toString(database));
+                }
 //                System.out.println("merged: " + newMergedPattern.toString(database));
 
                 // the new pattern might be merged with the last pattern in the candidate list.
@@ -212,7 +215,7 @@ public class merge {
         for (int i = 0; i < patternNums; i ++){
             
             pseudoSequentialPattern pattern = mergedPatterns.get(i);
-            if (pattern.getPatternLeftMostPos() == 105054356){
+            if (pattern.patternLeftMostPos == 43593626){
                 System.out.println(pattern.toString(database));
             }
 
@@ -220,9 +223,13 @@ public class merge {
                 mergedPatternWriter.write(pattern.toString(database));
                 mergedPatternWriter.newLine();
             }           
-
+            
+            
+            // Check if the pattern contains split aligned info, if it exist we check:
+            // If Split aligned position is the position of another SuperItem in current pattern.
             int[] splitAlignCoords = pattern.splitAlignForBP(database); 
             pattern.splitAlignCheck(database, mergedPatterns, splitLinkPatternBuffer, splitAlignCoords);
+            
             pattern.crossLinkBpEstimate(database);
             int splitMate = pattern.getSplitStatus(database);
             boolean isCrossSup = pattern.isCrossSup();
@@ -440,11 +447,12 @@ public class merge {
         }
         return isAfter;
     }
-    private Map<Integer, List<Integer>> getPatternStartIndexMap(List<pseudoSequentialPattern> arpPatterns){
+    private Map<Integer, List<Integer>> getPatternStartIndexMap(List<pseudoSequentialPattern> arpPatterns, SequenceDatabase database){
         Map<Integer, List<Integer>> indexMap = new HashMap<>();
         int numOfPatterns = arpPatterns.size();
         for (int i = 0; i < numOfPatterns ; i++){
             int patternLeftMostPos = arpPatterns.get(i).patternLeftMostPos;
+            
             List<Integer> indexList = indexMap.get(patternLeftMostPos);
             if (indexList == null) {
                 indexList = new ArrayList<>();

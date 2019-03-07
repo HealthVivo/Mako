@@ -11,12 +11,12 @@ package dataStructure;
  */
 public class ItemSeqIdentifier {
     
-    private int seqID;
-    private int subSeqStart;
+    private final int seqID;
+    private final int subSeqStart;
     // Item index in the sequence in terms of itemset index.
     
-    private int itemSetIdx;
-    private int itemIdx;
+    private final int itemSetIdx;
+    private final int itemIdx;
     // Allow sequence identifier of strings.
 //    private String sampleName;
 

@@ -33,22 +33,32 @@ public class superItemLink {
         return supLink;
     }
     
+    private List<String> getUniqueQnames(String[] qnames){
+        List<String> uniqueNames = new ArrayList<>(qnames.length);
+        Set<String> nameSet = new HashSet<>();
+        for (String name : qnames){            
+            if (!nameSet.contains(name)){
+                nameSet.add(name);
+                uniqueNames.add(name);
+            }
+        }
+        return uniqueNames;
+    }
+    
     public boolean twoSuperItemLinkCheck(SuperItem superItemOne, SuperItem superItemTwo){
         boolean supported = false;
-        String[] qnameOneByteList = superItemOne.getQNames();
-        String[] qnameTwoByteList = superItemTwo.getQNames();
+        List<String> qnameOneList = getUniqueQnames(superItemOne.getQNames());
+        List<String> qnameTwoList = getUniqueQnames(superItemTwo.getQNames());
         Set<String> uniqueQName = new HashSet<>();
-        
-        boolean extremeLarge = Math.abs(superItemOne.getPos() - superItemTwo.getPos()) > 500000 ? true : false;
-        
+               
         int supportedARPs = 0;
-        for (String qname : qnameOneByteList){            
+        for (String qname : qnameOneList){  
             uniqueQName.add(qname);
         }       
-        for (String qname : qnameTwoByteList){            
+        for (String qname : qnameTwoList){              
             if (uniqueQName.contains(qname)){
                 supportedARPs += 1;
-                if (supportedARPs > 1){
+                if (supportedARPs > 1 ){
                     supported = true;                   
                 }
             }

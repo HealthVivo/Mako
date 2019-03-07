@@ -45,7 +45,7 @@ public class params {
     public BufferedWriter susRegionWriter;
     public boolean hasParamInput = true;
     public boolean siFileMode = false;
-    public double minAf = 0.2;
+    public double minAf = 0.1;
     public List<String> excludableRegion;
     
     public params(){        
@@ -80,7 +80,7 @@ public class params {
         
                 
         sb.append("\nOptions:\n");
-        sb.append("af=    minimum allele fraction for Super-Item to make confident calls (default=0.2)\n");
+        sb.append("af=    minimum allele fraction for Super-Item to make confident calls (default=0.1)\n");
         sb.append("Note: use 0.1 for low coverage data (5X)\n");
         sb.append("cutStd=    given the cutoff to determine abnormal insert size read-pairs (default=3)\n");
         sb.append("maxD=    given the maximum distance to cluster abnormal read pairs (default=fragMean-readLen)\n");
